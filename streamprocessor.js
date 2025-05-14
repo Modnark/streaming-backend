@@ -3,8 +3,6 @@ const { spawn } = require('child_process');
 const config = require('./config.json');
 const fs = require('fs/promises');
 const glob = require('glob');
-const util = require('util');
-const globPromise = util.promisify(glob);
 
 function createNewStream(streamKey) {
     const ffmpeg = spawn('ffmpeg', [
@@ -42,7 +40,7 @@ function createNewStream(streamKey) {
 async function deleteStreamFiles(pattern) {
     console.log('Cleaning up...');
     try {
-        const files = await globPromise(pattern);
+        const files = await glob.promise(pattern);
         console.log('step 1');
         for (const file of files) {
             console.log(file);
