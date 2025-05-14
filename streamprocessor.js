@@ -12,9 +12,9 @@ function createNewStream(streamKey) {
         '-f', 'hls',
         '-hls_time', '1', // time in seconds of each segment
         '-hls_list_size', '10', // max size of segments, older get removed
-        '-hls_flags', 'delete_segments+append_list+independent_segments+split_by_time',
+        '-hls_flags', 'delete_segments+append_list+split_by_time',
         '-hls_segment_type', 'fmp4',
-        '-hls_fmp4_init_filename', `${config.server.streamStorage}/${streamKey}_init.mp4`,
+        '-hls_fmp4_init_filename', `${streamKey}_init.mp4`,
         '-hls_segment_filename', `${config.server.streamStorage}/${streamKey}_dat_%d.m4s`,
         `${config.server.streamStorage}/${streamKey}_dat.m3u8`        
     ]);
