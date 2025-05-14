@@ -38,7 +38,7 @@ function createNewStream(streamKey) {
 async function deleteStreamFiles(filename) {
     console.log('Cleaning up...');
     glob(filename, async(error, files) => {
-        if (error) throw error;
+        if (error) console.log(`!!!! ${error}`);
         console.log('step 1');
         for (const file of files) {
             console.log(file);
