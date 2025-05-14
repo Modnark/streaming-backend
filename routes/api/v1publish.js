@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const apiConfig = require('../../config.json').api;
 const processor = require('../../streamprocessor');
-const { quickError } = require('../../helpers');
+const { quickError, getStreamFileName } = require('../../helpers');
 const database = require('../../database');
 const db = database.db;
 
@@ -22,7 +22,8 @@ router.get(`${apiConfig.paths.V1}/publish`, async (req, res, next) => {
         });
 
         if(userRes) {
-            processor.createNewStream(streamKey);
+            const streamName = getStreamFileName(userRes.username, userRes.userId);
+            processor.createNewStream(streamName);
             return res.status(200).end();
         }
 
