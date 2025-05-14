@@ -1,0 +1,16 @@
+{
+    "server": {
+        "port": 3789
+    },
+
+    "database": {
+        "storage": ""
+    },
+
+    "api": {
+        "backendSecret": "",
+        "paths": {
+            "V1": "/api/v1"
+        }
+    }
+}
