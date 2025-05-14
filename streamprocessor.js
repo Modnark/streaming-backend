@@ -39,8 +39,9 @@ async function deleteStreamFiles(filename) {
     console.log('Cleaning up...');
     glob(filename, async(error, files) => {
         if (error) throw error;
-
+        console.log('step 1');
         for (const file of files) {
+            console.log(file);
             try {
                 await fs.unlink(file);
             } catch(e) {
@@ -57,11 +58,11 @@ async function stopStream(streamKey) {
         // kill ffmpeg if it hasn't been killed yet
         ffmpeg.kill('SIGINT');
         IStreams.delete(streamKey);
-        console.log(`Stopped stream ${streamKey}`);
+        console.log(`[0] Stopped stream ${streamKey}`);
     } else {
         if (ffmpeg.killed) {
             IStreams.delete(streamKey);
-            console.log(`Stopped stream ${streamKey}`);
+            console.log(`[1] Stopped stream ${streamKey}`);
         }
     }
 
