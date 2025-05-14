@@ -3,6 +3,8 @@ const router = express.Router();
 const apiConfig = require('../../config.json').api;
 const processor = require('../../streamprocessor');
 const { quickError } = require('../../helpers');
+const database = require('../../database');
+const db = database.db;
 
 router.get(`${apiConfig.paths.V1}/publish`, async (req, res, next) => {
     const streamKey = req.query.name;
