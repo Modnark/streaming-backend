@@ -23,7 +23,7 @@ router.get(`${apiConfig.paths.V1}/publish`, async (req, res, next) => {
 
         if(userRes) {
             const streamName = getStreamFileName(userRes.username, userRes.userId);
-            processor.createNewStream(streamName);
+            processor.createNewStream(streamName, streamKey);
             return res.status(200).end();
         }
 
