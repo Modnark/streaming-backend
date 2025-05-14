@@ -19,6 +19,7 @@ function createNewStream(streamKey) {
         `${config.server.streamStorage}/${streamKey}_dat.m3u8`        
     ]);
 
+    /*
     ffmpeg.stdout.setEncoding('utf8');
     ffmpeg.stdout.on('data', (data) => {
         console.log('STDOUT');
@@ -30,6 +31,7 @@ function createNewStream(streamKey) {
         console.log('STDERR');
         console.log(data);
     });
+    */
 
     IStreams.set(streamKey, ffmpeg);
     console.log(`Stream active for ${streamKey}`);
