@@ -13,8 +13,8 @@ function createNewStream(streamKey) {
         '-hls_flags', 'delete_segments+append_list+independent_segments+split_by_time',
         '-hls_segment_type', 'fmp4',
         '-hls_fmp4_init_filename', 'init.mp4',
-        '-hls_segment_filename', `${config.server.streamStorage}/${streamKey}/dat_%d.m4s`,
-        `${config.server.streamStorage}/${streamKey}/dat.m3u8`        
+        '-hls_segment_filename', `${config.server.streamStorage}/${streamKey}_dat_%d.m4s`,
+        `${config.server.streamStorage}/${streamKey}_dat.m3u8`        
     ]);
 
     ffmpeg.stdout.setEncoding('utf8');
