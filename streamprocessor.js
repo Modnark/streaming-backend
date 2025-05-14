@@ -43,7 +43,7 @@ async function deleteStreamFiles(filePath, streamKey) {
         const streamFiles = files.filter(file => file.startsWith(streamKey));
 
         for(const file of streamFiles) {
-            console.log(streamFiles);
+            await fs.unlink(path.join(filePath, file));
         }
     } catch(error) {
         console.log(error);
