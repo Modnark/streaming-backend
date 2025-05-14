@@ -36,6 +36,7 @@ function createNewStream(streamKey) {
 }
 
 async function deleteStreamFiles(filename) {
+    console.log('Cleaning up...');
     glob(filename, async(error, files) => {
         if (error) throw error;
 
@@ -65,7 +66,7 @@ async function stopStream(streamKey) {
     }
 
     // delete all files related to the stream
-    deleteStreamFiles(`${config.server.streamStorage}/${streamKey}*`);
+    await deleteStreamFiles(`${config.server.streamStorage}/${streamKey}*`);
 }
 
 module.exports = {
