@@ -22,7 +22,7 @@ router.get(`${apiConfig.paths.V1}/publish-done`, async (req, res) => {
         });
 
         if(userRes) {
-            processor.stopStream(streamKey);
+            await processor.stopStream(streamKey);
             return res.status(200).end();
         }
 
