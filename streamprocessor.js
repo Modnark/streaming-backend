@@ -2,7 +2,7 @@ const IStreams = new Map();
 const { spawn } = require('child_process');
 const config = require('./config.json');
 const fs = require('fs/promises');
-const glob = require('glob');
+const path = require('path');
 
 function createNewStream(streamKey) {
     const ffmpeg = spawn('ffmpeg', [
@@ -37,21 +37,16 @@ function createNewStream(streamKey) {
     console.log(`Stream active for ${streamKey}`);
 }
 
-async function deleteStreamFiles(pattern) {
-    console.log('Cleaning up...');
+async function deleteStreamFiles(filePath, streamKey) {
     try {
-        const files = await glob.promise(pattern);
-        console.log('step 1');
-        for (const file of files) {
-            console.log(file);
-            try {
-                await fs.unlink(file);
-            } catch (e) {
-                console.error(`[SP] Failed to delete file ${file}: ${e.message}`);
-            }
+        const files = await fs.readdir(filePath);
+        const streamFiles = files.filter(file => file.startsWith(streamKey));
+
+        for(const file of streamFiles) {
+            console.log(streamFiles);
         }
-    } catch (globErr) {
-        console.error(`Glob failed: ${globErr.message}`);
+    } catch(error) {
+        console.log(error);
     }
 }
 
@@ -67,7 +62,7 @@ async function stopStream(streamKey) {
     }
 
     // Await cleanup
-    await deleteStreamFiles(`${config.server.streamStorage}/${streamKey}*`);
+    await deleteStreamFiles(config.server.streamStorage, streamKey);
 }
 
 module.exports = {
