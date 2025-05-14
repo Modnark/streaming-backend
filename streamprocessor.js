@@ -6,9 +6,16 @@ const path = require('path');
 
 function createNewStream(streamName, streamKey) {
     const ffmpeg = spawn('ffmpeg', [
+        '-fflags', '+nobuffer',
         '-i', `rtmp://localhost/golive/${streamKey}`,
-        '-c:v', 'libx264', '-preset', 'ultrafast', '-g', '30', '-sc_threshold', '0',
-        '-c:a', 'aac', '-ar', '44100', '-b:a', '128k',
+        '-c:v', 'libx264', 
+        '-preset', 'ultrafast', 
+        '-g', '30', 
+        '-sc_threshold', '0',
+        '-tune', 'zerolatency',
+        '-c:a', 'aac', 
+        '-ar', '44100', 
+        '-b:a', '128k',
         '-f', 'hls',
         '-hls_time', '1', // time in seconds of each segment
         '-hls_list_size', '2', // max size of segments, older get removed
