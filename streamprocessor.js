@@ -11,15 +11,14 @@ function createNewStream(streamName, streamKey) {
         '-c:a', 'aac', '-ar', '44100', '-b:a', '128k',
         '-f', 'hls',
         '-hls_time', '1', // time in seconds of each segment
-        '-hls_list_size', '10', // max size of segments, older get removed
-        '-hls_flags', 'delete_segments+append_list+split_by_time',
+        '-hls_list_size', '2', // max size of segments, older get removed
+        '-hls_flags', 'delete_segments+append_list+split_by_time+program_date_ti',
         '-hls_segment_type', 'fmp4',
         '-hls_fmp4_init_filename', `${streamName}_init.mp4`,
         '-hls_segment_filename', `${config.server.streamStorage}/${streamName}_dat_%d.m4s`,
         `${config.server.streamStorage}/${streamName}_dat.m3u8`        
     ]);
 
-    
     ffmpeg.stdout.setEncoding('utf8');
     ffmpeg.stdout.on('data', (data) => {
         console.log('STDOUT');
