@@ -3,6 +3,8 @@ const { spawn } = require('child_process');
 const config = require('./config.json');
 const fs = require('fs/promises');
 const glob = require('glob');
+const util = require('util');
+const globPromise = util.promisify(glob);
 
 function createNewStream(streamKey) {
     const ffmpeg = spawn('ffmpeg', [
@@ -37,39 +39,37 @@ function createNewStream(streamKey) {
     console.log(`Stream active for ${streamKey}`);
 }
 
-function deleteStreamFiles(filename) {
+async function deleteStreamFiles(pattern) {
     console.log('Cleaning up...');
-    glob(filename, async(error, files) => {
-        if (error) console.log(`!!!! ${error}`);
+    try {
+        const files = await globPromise(pattern);
         console.log('step 1');
         for (const file of files) {
             console.log(file);
             try {
                 await fs.unlink(file);
-            } catch(e) {
-                console.error(`[SP] Failed to delete file ${file}`);
+            } catch (e) {
+                console.error(`[SP] Failed to delete file ${file}: ${e.message}`);
             }
         }
-    });
+    } catch (globErr) {
+        console.error(`Glob failed: ${globErr.message}`);
+    }
 }
 
 async function stopStream(streamKey) {
     const ffmpeg = IStreams.get(streamKey);
 
-    if(ffmpeg) {
-        // kill ffmpeg if it hasn't been killed yet
+    if (ffmpeg) {
         ffmpeg.kill('SIGINT');
         IStreams.delete(streamKey);
         console.log(`[0] Stopped stream ${streamKey}`);
     } else {
-        if (ffmpeg.killed) {
-            IStreams.delete(streamKey);
-            console.log(`[1] Stopped stream ${streamKey}`);
-        }
+        console.log(`[!] No active ffmpeg process for ${streamKey}`);
     }
 
-    // delete all files related to the stream
-    deleteStreamFiles(`${config.server.streamStorage}/${streamKey}*`);
+    // Await cleanup
+    await deleteStreamFiles(`${config.server.streamStorage}/${streamKey}*`);
 }
 
 module.exports = {
