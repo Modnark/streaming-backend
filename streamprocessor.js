@@ -19,6 +19,10 @@ function createNewStream(streamName, streamKey) {
         `${config.server.streamStorage}/${streamName}_dat.m3u8`       
     ]);
 
+    ffmpeg.stderr.on('data', (d) => {
+        console.log(d);
+    });
+
     IStreams.set(streamKey, ffmpeg);
     console.log(`Stream active for ${streamKey}`);
 }
