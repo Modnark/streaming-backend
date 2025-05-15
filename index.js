@@ -3,11 +3,17 @@ const app = express();
 const config = require('./config.json');
 const routes = require('./router');
 const database = require('./database');
+const { houseKeeper } = require('./housekeeper');
+const houseKeeperInterval = 60; // In seconds
+const mod = 1000;
 
 const appPort = config.server.port;
 
 // Load routes
 routes(app);
+
+// Setup housekeeping
+setInterval(houseKeeper, houseKeeperInterval * mod);
 
 // Server startup
 const db = database.db;
