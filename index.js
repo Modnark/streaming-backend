@@ -13,6 +13,7 @@ const appPort = config.server.port;
 routes(app);
 
 // Setup housekeeping
+houseKeeper();
 setInterval(houseKeeper, houseKeeperInterval * mod);
 
 // Server startup

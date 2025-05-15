@@ -13,7 +13,7 @@ async function houseKeeper() {
             const delta = Date.now() - mTime;
             if(delta >= 60000) {
                 const ext = path.extname(file);
-                console.log(ext);
+                console.log(ext, delta);
                 if(ext === 'm3u8' || ext === 'm4s') {
                     await fs.unlink(path.join(filePath, file));
                 }
