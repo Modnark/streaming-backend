@@ -45,7 +45,7 @@ const User = sequelize.define('User', {
         unique: true,
         allowNull: false        
     },
-    power: {
+    power: { // unused as of now
         type: Sequelize.SMALLINT,
         allowNull: false,
         defaultValue: 0

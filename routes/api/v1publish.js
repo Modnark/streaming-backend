@@ -10,6 +10,7 @@ router.get(`${apiConfig.paths.V1}/publish`, async (req, res, next) => {
     const streamKey = req.query.name;
 
     try {
+        // Try to find a user by the stream key sent to the server
         const userRes = await db.transaction(async(t) => {
             const user = await database.models.User.findOne({
                 where: {
@@ -21,11 +22,12 @@ router.get(`${apiConfig.paths.V1}/publish`, async (req, res, next) => {
             return user;
         });
 
+        // We found a user with this stream key, we can start a stream now
         if(userRes) {
             processor.createNewStream(userRes.publicStreamKey, streamKey);
             return res.status(200).end();
         }
-
+        
         return res.status(400).json({error: {details: [{message: 'Invalid stream key.'}]}});
     } catch(error) {
         next(error);
