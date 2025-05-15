@@ -13,8 +13,8 @@ async function houseKeeper() {
             const delta = Date.now() - mTime;
             if(delta >= 60000) {
                 const ext = path.extname(file);
-                console.log(ext, delta);
-                if(ext === 'm3u8' || ext === 'm4s') {
+                if(ext === '.m3u8' || ext === '.m4s') {
+                    console.log(`Removing stale file ${file} with delta of ${delta}`);
                     await fs.unlink(path.join(filePath, file));
                 }
             }
