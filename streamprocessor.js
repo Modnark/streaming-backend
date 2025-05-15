@@ -20,7 +20,7 @@ function createNewStream(streamName, streamKey) {
     ]);
 
     ffmpeg.stderr.on('data', (d) => {
-        console.log(d);
+        console.log(d.toString());
     });
 
     IStreams.set(streamKey, ffmpeg);
