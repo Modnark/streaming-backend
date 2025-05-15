@@ -40,6 +40,11 @@ const User = sequelize.define('User', {
         unique: true,
         allowNull: false
     },
+    publicStreamKey: {
+        type: Sequelize.TEXT,
+        unique: true,
+        allowNull: false        
+    },
     power: {
         type: Sequelize.SMALLINT,
         allowNull: false,

@@ -6,13 +6,11 @@ const path = require('path');
 
 function createNewStream(streamName, streamKey) {
     const ffmpeg = spawn('ffmpeg', [
-        '-fflags', '+nobuffer',
         '-i', `rtmp://localhost/golive/${streamKey}`,
         '-c:v', 'libx264', 
-        '-preset', 'ultrafast', 
-        '-g', '30', 
+        '-preset', 'ultrafast',
+        '-g', '25', 
         '-sc_threshold', '0',
-        '-tune', 'zerolatency',
         '-c:a', 'aac', 
         '-ar', '44100', 
         '-b:a', '128k',
@@ -25,18 +23,6 @@ function createNewStream(streamName, streamKey) {
         '-hls_segment_filename', `${config.server.streamStorage}/${streamName}_dat_%d.m4s`,
         `${config.server.streamStorage}/${streamName}_dat.m3u8`        
     ]);
-
-    ffmpeg.stdout.setEncoding('utf8');
-    ffmpeg.stdout.on('data', (data) => {
-        console.log('STDOUT');
-        console.log(data);
-    });
-
-    ffmpeg.stderr.setEncoding('utf8');
-    ffmpeg.stderr.on('data', (data) => {
-        console.log('STDERR');
-        console.log(data);
-    });
 
     IStreams.set(streamKey, ffmpeg);
     console.log(`Stream active for ${streamKey}`);
