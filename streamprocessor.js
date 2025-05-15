@@ -7,13 +7,8 @@ const path = require('path');
 function createNewStream(streamName, streamKey) {
     const ffmpeg = spawn('ffmpeg', [
         '-i', `rtmp://localhost/golive/${streamKey}`,
-        '-c:v', 'libx264', 
-        '-preset', 'ultrafast',
-        '-g', '25', 
-        '-sc_threshold', '0',
-        '-c:a', 'aac', 
-        '-ar', '44100', 
-        '-b:a', '128k',
+        '-c:v', 'libx264', '-preset', 'ultrafast', '-g', '30', '-sc_threshold', '0',
+        '-c:a', 'aac', '-ar', '44100', '-b:a', '128k',
         '-f', 'hls',
         '-hls_time', '1', // time in seconds of each segment
         '-hls_list_size', '2', // max size of segments, older get removed
@@ -21,7 +16,7 @@ function createNewStream(streamName, streamKey) {
         '-hls_segment_type', 'fmp4',
         '-hls_fmp4_init_filename', `${streamName}_init.mp4`,
         '-hls_segment_filename', `${config.server.streamStorage}/${streamName}_dat_%d.m4s`,
-        `${config.server.streamStorage}/${streamName}_dat.m3u8`        
+        `${config.server.streamStorage}/${streamName}_dat.m3u8`       
     ]);
 
     IStreams.set(streamKey, ffmpeg);
