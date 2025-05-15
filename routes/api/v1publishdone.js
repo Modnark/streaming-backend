@@ -39,8 +39,8 @@ router.get(`${apiConfig.paths.V1}/publish-done`, async (req, res) => {
 
         if(userRes && previousStreamKey) {
             const streamName = previousStreamKey;
-            await processor.stopStream(streamName);
-            
+            await processor.stopStream(previousStreamKey);
+
             return res.status(200).end();
         }
 

@@ -4,6 +4,31 @@ const config = require('./config.json');
 const fs = require('fs/promises');
 const path = require('path');
 
+async function deleteStreamFiles(filePath, streamKey) {
+    try {
+        const files = await fs.readdir(filePath);
+        const streamFiles = files.filter(file => file.startsWith(streamKey));
+
+        for(const file of streamFiles) {
+            await fs.unlink(path.join(filePath, file));
+        }
+    } catch(error) {
+        console.log(error);
+    }
+}
+
+async function onProcessorExit(streamKey) {
+    console.log('FFMPEG died! Cleaning up...');
+    
+    try {
+        IStreams.delete(streamKey);
+        console.log('Removed old entries...');
+    } catch(error) {}
+
+    // Try to remove files (will be removed later anyways~)
+    await deleteStreamFiles(config.server.streamStorage, streamKey);
+}
+
 function createNewStream(streamName, streamKey) {
     const ffmpeg = spawn('ffmpeg', [
         '-i', `rtmp://localhost/golive/${streamKey}`,
@@ -21,22 +46,17 @@ function createNewStream(streamName, streamKey) {
 
     // Stupid hack
     ffmpeg.stderr.on('data', (d) => {});
-    
-    IStreams.set(streamKey, ffmpeg);
+
+    // Catch any unexpected closure
+    ffmpeg.on('exit', async (code, signal) => {
+        await onProcessorExit(streamName);
+    });
+    ffmpeg.on('close', async (code, signal) => {
+        await onProcessorExit(streamName);
+    });
+
+    IStreams.set(streamName, ffmpeg);
     console.log(`Stream active for ${streamKey}`);
-}
-
-async function deleteStreamFiles(filePath, streamKey) {
-    try {
-        const files = await fs.readdir(filePath);
-        const streamFiles = files.filter(file => file.startsWith(streamKey));
-
-        for(const file of streamFiles) {
-            await fs.unlink(path.join(filePath, file));
-        }
-    } catch(error) {
-        console.log(error);
-    }
 }
 
 async function stopStream(streamKey) {
@@ -44,11 +64,15 @@ async function stopStream(streamKey) {
 
     if (ffmpeg) {
         ffmpeg.kill('SIGINT');
-        IStreams.delete(streamKey);
         console.log(`[0] Stopped stream ${streamKey}`);
     } else {
         console.log(`[!] No active ffmpeg process for ${streamKey}`);
     }
+
+    try {
+        IStreams.delete(streamKey);
+        console.log('Removed old entries...');
+    } catch(error) {}
 
     // Await cleanup
     await deleteStreamFiles(config.server.streamStorage, streamKey);
