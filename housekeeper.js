@@ -10,14 +10,13 @@ async function houseKeeper() {
         const files = await fs.readdir(filePath); // get all files in the storage folder
         const filteredFiles = files.filter(file => {
             const ext = path.extname(file).toLowerCase();
-            return ['.m3u8', '.mp4', '.m4s'].includes(ext);
+            return ['.m3u8', '.m4s'].includes(ext);
         });
 
         for(const file of filteredFiles) {
              // get modified time of each file
-            const ext = path.extname(file);
             const stats = await fs.stat(path.join(filePath, file));
-            const fTime = ext === '.mp4' ? stats.atimeMs : stats.mtimeMs;
+            const fTime = stats.mtimeMs;
             const delta = Date.now() - fTime;
 
             if(delta >= staleThreshold) // Check if files are older than 1 minute
