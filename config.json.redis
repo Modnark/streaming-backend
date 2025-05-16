@@ -1,8 +1,11 @@
 {
     "server": {
-        "port": 3789
+        "port": 9924,
+        "streamStorage": "",
+        "houseKeeperInterval": 60,
+        "houseKeeperStaleThreshold": 60
     },
-
+    
     "database": {
         "storage": ""
     },
